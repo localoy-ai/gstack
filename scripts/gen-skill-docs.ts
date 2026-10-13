@@ -1100,7 +1100,7 @@ for (const currentHost of hostsToRun) {
     // sidestep host-portable section paths until that plumbing lands. No-op for
     // any skill without a sections/ dir. Mirrors the SKILL.md DRY_RUN handling so
     // sections participate in the freshness gate.
-    for (const sec of currentHost === 'claude' ? discoverSectionTemplates(ROOT) : []) {
+    for (const sec of currentHost === 'claude' || currentHost === 'localoy' ? discoverSectionTemplates(ROOT) : []) {
       if (currentHostConfig.generation.includeSkills?.length &&
           !currentHostConfig.generation.includeSkills.includes(sec.skillDir)) continue;
       if (currentHostConfig.generation.skipSkills?.length &&

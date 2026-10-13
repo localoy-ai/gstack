@@ -58,6 +58,13 @@ export const SECTION: ResolverFn = (ctx: TemplateContext, args?: string[]): stri
   if (!id) throw new Error('{{SECTION:id}} requires a section id');
   const entry = findSection(ctx.skillName, id);
 
+  // Localoy's skill tool reads a skill's own files, so it carves like Claude.
+  if (ctx.host === 'localoy') {
+    return [
+      `> **STOP.** Before ${entry.trigger}, load \`sections/${entry.file}\` with the skill tool (this skill, file`,
+      `> \`sections/${entry.file}\`) and execute it in full. Do not work from memory.`,
+    ].join('\n');
+  }
   if (ctx.host === 'claude') {
     const sectionPath = `${ctx.paths.skillRoot}/${ctx.skillName}/sections/${entry.file}`;
     return [
@@ -77,7 +84,7 @@ export const SECTION: ResolverFn = (ctx: TemplateContext, args?: string[]): stri
  * Claude only; other hosts inline everything so an index would be noise.
  */
 export const SECTION_INDEX: ResolverFn = (ctx: TemplateContext, args?: string[]): string => {
-  if (ctx.host !== 'claude') return '';
+  if (ctx.host !== 'claude' && ctx.host !== 'localoy') return '';
   const skill = args?.[0] ?? ctx.skillName;
   const manifest = loadManifest(skill);
   const lines: string[] = [

@@ -16,6 +16,7 @@
  */
 
 
+import { localoyPreamble } from './localoy';
 import type { TemplateContext } from './types';
 import { generateModelOverlay } from './model-overlay';
 import { generateQuestionTuning } from './question-tuning';
@@ -76,6 +77,8 @@ export function generatePreamble(ctx: TemplateContext): string {
   if (tier < 1 || tier > 4) {
     throw new Error(`Invalid preamble-tier: ${tier} in ${ctx.tmplPath}. Must be 1-4.`);
   }
+  // Localoy has no gstack runtime: its short preamble (resolvers/localoy.ts).
+  if (ctx.host === 'localoy') return localoyPreamble(ctx);
   const sections = [
     generatePreambleBash(ctx),
     ...(ctx.skillName === 'make-pdf' ? [generateMakePdfSetup(ctx)] : []),
