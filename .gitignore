@@ -66,3 +66,4 @@ ios-qa/scripts/gen-accessors-tool/Package.resolved
 # Localoy host build output (scripts/localoy-pack.sh)
 .localoy/
 dist-localoy/
+.localoy-main/
