@@ -52,8 +52,8 @@ telemetry, no update checks). Blip, Localoy's Apps & Websites agent, starts
 with these skills; any agent can use them as /commands.
 
 gstack $(cat VERSION), built from commit ${UPSTREAM} by
-\`scripts/localoy-pack.sh\` (host config \`hosts/localoy.ts\`) on the
-\`localoy-host\` branch of https://github.com/localoy-ai/gstack-src.
+\`scripts/localoy-pack.sh\` (host config \`hosts/localoy.ts\`) on this
+repository's \`localoy-host\` branch, which follows upstream gstack.
 
 MIT License, Copyright (c) 2026 Garry Tan (see LICENSE). Not affiliated with
 or endorsed by gstack or Garry Tan.
