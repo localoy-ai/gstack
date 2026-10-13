@@ -54,12 +54,24 @@ const localoy = defineHost({
     'BRAIN_CACHE_REFRESH', 'BRAIN_WRITE_BACK', 'TASTE_PROFILE',
   ],
 
-  // The skills Localoy's Blip (Apps & Websites) starts with. The rest need
-  // gstack's runtime (iOS bridge, gbrain, Codex, pairing) to mean anything.
+  // Everything that means something without gstack's runtime: Blip (Apps &
+  // Websites) starts with all of it. Left out, because only gstack's own
+  // runtime gives them meaning: other agents' CLIs (codex, claude-code), its
+  // Chrome launcher and pairing (connect-chrome, open-gstack-browser,
+  // pair-agent, setup-browser-cookies, browse, skillify), iPhone device work
+  // (ios-*), gbrain (setup-gbrain, sync-gbrain), its own upkeep
+  // (gstack-upgrade, learn, plan-tune, benchmark-models, landing-report).
   generation: {
     generateMetadata: false,
-    includeSkills: ['investigate', 'review', 'ship', 'plan-eng-review', 'health', 'cso', 'document-release',
-      'retro', 'careful', 'guard', 'freeze', 'unfreeze', 'qa', 'qa-only', 'design-review'],
+    includeSkills: [
+      'office-hours', 'spec', 'autoplan', 'plan-ceo-review', 'plan-eng-review', 'plan-design-review', 'plan-devex-review',
+      'design-consultation', 'design-shotgun', 'design-html', 'design-review', 'diagram',
+      'investigate', 'review', 'ship', 'land-and-deploy', 'setup-deploy', 'canary', 'benchmark',
+      'qa', 'qa-only', 'devex-review', 'health', 'cso',
+      'document-generate', 'document-release', 'make-pdf', 'retro',
+      'context-save', 'context-restore', 'scrape',
+      'careful', 'guard', 'freeze', 'unfreeze',
+    ],
   },
 
   install: {

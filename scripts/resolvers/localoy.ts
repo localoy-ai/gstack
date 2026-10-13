@@ -15,7 +15,10 @@ import { generateConfusionProtocol } from './preamble/generate-confusion-protoco
 import { generateEvidenceDirective } from './preamble/generate-evidence-directive';
 
 /** Skills whose procedure drives a browser through `$B`. */
-const BROWSER_SKILLS = new Set(['qa', 'qa-only', 'design-review', 'browse', 'canary', 'benchmark', 'office-hours', 'ship']);
+const BROWSER_SKILLS = new Set(['qa', 'qa-only', 'design-review', 'canary', 'benchmark', 'office-hours', 'ship', 'scrape', 'devex-review', 'land-and-deploy', 'design-consultation', 'plan-design-review', 'design-html']);
+
+/** Skills whose procedure makes mockups through gstack's designer, `$D`. */
+const DESIGN_SKILLS = new Set(['design-consultation', 'design-shotgun', 'design-html', 'design-review', 'plan-design-review', 'office-hours']);
 
 export function localoyPreamble(ctx: TemplateContext): string {
   const tier = ctx.preambleTier ?? 1;
@@ -30,6 +33,7 @@ You are one of the user's Localoy agents. Use your own tools: terminal for comma
       generateEvidenceDirective(ctx),
     ] : []),
     ...(BROWSER_SKILLS.has(ctx.skillName) ? [localoyBrowserTable()] : []),
+    ...(DESIGN_SKILLS.has(ctx.skillName) ? [localoyDesignTable()] : []),
     `## Completion Status
 
 End with one of: **DONE** (completed, with evidence), **DONE_WITH_CONCERNS** (completed; list them), **BLOCKED** (state the blocker and what you tried), **NEEDS_CONTEXT** (say exactly what you need). Escalate after 3 failed attempts, on an uncertain security-sensitive change, or on scope you cannot verify.`,
@@ -64,4 +68,24 @@ This skill writes browser steps as \`$B <command>\` for gstack's own browser. Lo
 | \`$B js\`, \`$B eval\`, \`$B console\`, \`$B perf\`, \`$B responsive\`, \`$B pdf\`, \`$B network\` | **not available.** Skip that check and list it under "Not checked" in your report, with why |
 
 For a whole goal on a page ("log in and open the billing page"), action \`do\` with the goal is faster than step by step.`;
+}
+
+/**
+ * gstack's designer (`$D`, OpenAI images behind gstack's own key) as
+ * Localoy's generate_image tool, which spends the person's Localoy credit
+ * and asks first. Mockups are pictures to look at, never the deliverable.
+ */
+export function localoyDesignTable(): string {
+  return `## Mockups: \`$D\` commands in Localoy
+
+This skill makes mockups with \`$D <command>\`, gstack's designer. Localoy has no \`$D\`: make them with your **generate_image** tool (it uses the person's credit, and the app asks before it spends). Make fewer pictures than the skill suggests: one per direction is enough, and say what each costs before a batch.
+
+| gstack | Localoy |
+|---|---|
+| \`$D generate "<brief>"\` | generate_image with the brief, saved in the working folder |
+| \`$D variants\` / \`$D evolve\` / \`$D iterate\` | generate_image again, one picture per direction or change |
+| \`$D compare\` / \`$D check\` | look at the saved pictures yourself (read_file shows a picture) and judge them against the brief |
+| \`$D setup\`, \`$D path\`, a comparison board | not needed: show the pictures in your reply and ask the person to pick |
+
+If the person says no to spending credit, describe each direction in words (layout, type, colour, spacing) and carry on.`;
 }
