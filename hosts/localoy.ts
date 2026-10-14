@@ -25,6 +25,19 @@ const localoy = defineHost({
     { from: 'CLAUDE.md', to: 'AGENTS.md' },
   ],
   toolRewrites: {
+    // design-shotgun's fan-out names Claude Code's Agent tool across a line
+    // break, so the plain rewrites below never matched and Blip wrote every
+    // variant itself in one long reply (2026-10-13: three homepages, 112 s).
+    // First, so it wins over the shorter rewrites.
+    ['**Launch N Agent subagents in a single message** (parallel execution). Use the Agent\n' +
+      'tool with `subagent_type: "general-purpose"` and `run_in_background: false` for each\n' +
+      'variant (parallel foreground calls in one message still run concurrently; subagents\n' +
+      'default to background since Claude Code v2.1.198, and the comparison board needs every\n' +
+      "variant's result)."]:
+      '**Call the task tool N times in a single response** (parallel execution): one helper per\n' +
+      'variant. Helpers called in one response run at the same time, and the comparison board\n' +
+      "needs every variant's result.",
+    'Agent subagents': 'helpers (the task tool)',
     'use the Bash tool': 'use the terminal tool',
     'use the Read tool': 'use the read_file tool',
     'use the Write tool': 'use the write_file tool',
