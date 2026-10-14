@@ -316,11 +316,9 @@ console.log("GSTACK_STEP_OK");
 Then `cp "<ASIDE_DIR>/current.png" "$_DESIGN_DIR/current.png"` and Read it so the user
 sees what you're evolving from.
 
-**Launch N Agent subagents in a single message** (parallel execution). Use the Agent
-tool with `subagent_type: "general-purpose"` and `run_in_background: false` for each
-variant (parallel foreground calls in one message still run concurrently; subagents
-default to background since Claude Code v2.1.198, and the comparison board needs every
-variant's result). Each agent is independent
+**Call the task tool N times in a single response** (parallel execution): one helper per
+variant. Helpers called in one response run at the same time, and the comparison board
+needs every variant's result. Each agent is independent
 and handles its own generation, quality check, verification, and retry.
 
 **Important: $D path propagation.** The `$D` variable from DESIGN SETUP is a shell
